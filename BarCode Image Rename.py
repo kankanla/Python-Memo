@@ -48,11 +48,10 @@ def dir1(ps):
         file1(f)
 
 def xx():
-    if __file__ == 'BarCode Image Rename.py':
-        if Path.is_file(arpath):
-            file1(arpath)
-        if Path.is_dir(arpath):
-            dir1(arpath)
+    if Path.is_file(arpath):
+        file1(arpath)
+    if Path.is_dir(arpath):
+        dir1(arpath)
 
 if len(sys.argv) > 1 :
     arpath=Path(sys.argv[1])
