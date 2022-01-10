@@ -60,7 +60,7 @@ if len(sys.argv) > 1 :
 else:
     print('')
     print('==============================')
-    print('Image File BarCode decode v1.0')
+    print('Image File BarCode decode v1.2')
     print('powered by ZPower')
     print('Produced by ZPower')
     print('==============================')
