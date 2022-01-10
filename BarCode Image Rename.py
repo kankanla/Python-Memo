@@ -39,7 +39,6 @@ def rensn(path,namestr):
             break
 
 def addcsvfile(basena,barcode,folder):
-    print("---------add---------")
     filename = 'SNList.txt'
     f = open(filename,'a+',newline='')
     cw = csv.writer(f)
@@ -49,7 +48,6 @@ def addcsvfile(basena,barcode,folder):
     pass
 
 def sql3(basena,barcode,folder):
-    print("---------sql3---------")
     dbname = 'Serial.db'
     if not Path(dbname).is_file():
         crt="CREATE TABLE IF NOT EXISTS Serial (id INTEGER PRIMARY KEY,basena TEXT,barcode TEXT,folder TEXT)"
@@ -60,20 +58,19 @@ def sql3(basena,barcode,folder):
     else:
         con = sqlite3.connect(dbname)
         # INSERT INTO テーブル名(カラム1, カラム2, ...) VALUES(値1, 値2, ...);
-        intr = "insert into Serial(basena,barcode,folder)values(\"{}\",\"{}\",\"=HYPERLINK(\"\"{}\"\")".format(str('\''+basena),str('\''+barcode),str(Path(folder).parent))
+        intr = "insert into Serial(basena,barcode,folder)values(\"{}\",\"{}\",\"=HYPERLINK(\"\"{}\"\")\")".format(str('\''+basena),str('\''+barcode),str(Path(folder).parent))
         # intr = "insert into Serial(basena,barcode,folder)values('{}','{}','{}')".format(basena,barcode,str(Path(folder).parent))
-      
-        print(intr)
+
         con.execute(intr)
         con.commit()
-        con.execute(".mode csv")
-        con.execute(".output SNList.csv")
-        con.execute("select * from Serial")
-        con.execute(".output stdout")
+        # con.execute('.mode csv')
+        # con.execute('.output SNList.csv')
+        # con.execute('select * from Serial')
+        # con.execute('.output stdout')
         con.close()
 
     pass
-    input()
+
 
 def file1(ps):
     tts =['.jpg','.png','.bmp']
