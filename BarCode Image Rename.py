@@ -4,6 +4,8 @@
 # from tkinter import messagebox
 import os
 import sys
+import csv
+import sqlite3
 from pathlib import Path
 from PIL import Image
 from pyzbar.pyzbar import decode
@@ -32,7 +34,46 @@ def rensn(path,namestr):
         pat = str(ps)+'\\'+ namestr+'('+ str(a) +')' +str(pp)
         if not Path(pat).is_file():
             os.rename(str(temp),str(pat))
+            addcsvfile(str(ps.name),namestr,str(pat))
+            sql3(str(ps.name),namestr,str(pat))
             break
+
+def addcsvfile(basena,barcode,folder):
+    print("---------add---------")
+    filename = 'SNList.txt'
+    f = open(filename,'a+',newline='')
+    cw = csv.writer(f)
+    data = [str('\''+basena),str('\''+barcode),'=HYPERLINK("'+ str(Path(folder).parent) +'")']
+    cw.writerow(data)
+    f.close()
+    pass
+
+def sql3(basena,barcode,folder):
+    print("---------sql3---------")
+    dbname = 'Serial.db'
+    if not Path(dbname).is_file():
+        crt="CREATE TABLE IF NOT EXISTS Serial (id INTEGER PRIMARY KEY,basena TEXT,barcode TEXT,folder TEXT)"
+        con = sqlite3.connect(dbname)
+        con.execute(crt)
+        con.commit()
+        con.close()
+    else:
+        con = sqlite3.connect(dbname)
+        # INSERT INTO テーブル名(カラム1, カラム2, ...) VALUES(値1, 値2, ...);
+        intr = "insert into Serial(basena,barcode,folder)values(\"{}\",\"{}\",\"=HYPERLINK(\"\"{}\"\")".format(str('\''+basena),str('\''+barcode),str(Path(folder).parent))
+        # intr = "insert into Serial(basena,barcode,folder)values('{}','{}','{}')".format(basena,barcode,str(Path(folder).parent))
+      
+        print(intr)
+        con.execute(intr)
+        con.commit()
+        con.execute(".mode csv")
+        con.execute(".output SNList.csv")
+        con.execute("select * from Serial")
+        con.execute(".output stdout")
+        con.close()
+
+    pass
+    input()
 
 def file1(ps):
     tts =['.jpg','.png','.bmp']
