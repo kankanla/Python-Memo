@@ -1,4 +1,4 @@
-# pip install pyzbar
+# pip install pyzbar  You can find Visual C++ Redistributable Packages for Visual Studio 2013 here
 # pip install pillow
 
 # from tkinter import messagebox
@@ -12,15 +12,19 @@ from pyzbar.pyzbar import decode
 
 def getSN(imagefilepath):
     sr = []
-    img = Image.open(imagefilepath)
+    img = Image.open(imagefilepath,mode='r')
     sr = decode(img)
+    img.close()
   
+    print(imagefilepath.name)
     if len(sr) == 0:
+        print('     none code')
+        print('')
         return sr
     
     for v in sr:
-        print("files ",v[0].decode('utf-8', 'ignore'))
-
+        print("     >>code: ",v[0].decode('utf-8', 'ignore')+'   >>type:' + v.type)
+    print('')
     rensn(imagefilepath,sr[0][0].decode('utf-8','ignore'))
     return sr[0][0].decode('utf-8','ignore')
 
@@ -31,7 +35,7 @@ def rensn(path,namestr):
     a=0
     while True:
         a+=1
-        pat = str(ps)+'\\'+ namestr+'('+ str(a) +')' +str(pp)
+        pat = str(ps)+'\\'+ namestr+' ('+ str(a) +')' +str(pp)
         if not Path(pat).is_file():
             os.rename(str(temp),str(pat))
             addcsvfile(str(ps.name),namestr,str(pat))
@@ -57,27 +61,19 @@ def sql3(basena,barcode,folder):
         con.close()
     else:
         con = sqlite3.connect(dbname)
-        # INSERT INTO テーブル名(カラム1, カラム2, ...) VALUES(値1, 値2, ...);
         intr = "insert into Serial(basena,barcode,folder)values(\"{}\",\"{}\",\"=HYPERLINK(\"\"{}\"\")\")".format(str('\''+basena),str('\''+barcode),str(Path(folder).parent))
-        # intr = "insert into Serial(basena,barcode,folder)values('{}','{}','{}')".format(basena,barcode,str(Path(folder).parent))
 
         con.execute(intr)
         con.commit()
-        # con.execute('.mode csv')
-        # con.execute('.output SNList.csv')
-        # con.execute('select * from Serial')
-        # con.execute('.output stdout')
         con.close()
 
-    pass
-
-
 def file1(ps):
-    tts =['.jpg','.png','.bmp']
+    tts =['.JPG','.PNG','.BMP','.jpg','.png','.bmp']
     if ps.suffix in tts:
         getSN(ps)
     else:
-        print("non-image files")
+        print(ps.name)
+        print('')
 
 def dir1(ps):
     flist=ps.glob('*')
@@ -102,6 +98,7 @@ else:
     print('Produced by ZPower')
     print('==============================')
 
+print('.end')
 input()
 # messagebox.showinfo("pause","pause")
 # decode(Image.open('pyzbar/tests/code128.png'))
