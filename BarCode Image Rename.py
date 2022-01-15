@@ -147,6 +147,7 @@ else:
     print('==============================')
 
 print('.end')
-input()
+os.system('PAUSE')
+# input()
 # messagebox.showinfo("pause","pause")
 # decode(Image.open('pyzbar/tests/code128.png'))
