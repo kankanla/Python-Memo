@@ -112,8 +112,7 @@ def send_IPM(basena, barcode, folder):
 
 
 def file1(ps):
-    tts = ['.JPG', '.PNG', '.BMP', '.jpg', '.png', '.bmp']
-    if ps.suffix in tts:
+    if ps.suffix in ['.JPG', '.PNG', '.BMP', '.jpg', '.png', '.bmp']:
         getSN(ps)
     else:
         print(ps.name)
@@ -121,8 +120,7 @@ def file1(ps):
 
 
 def dir1(ps):
-    flist = ps.glob('*')
-    for f in flist:
+    for f in ps.glob('*'):
         if Path.is_dir(f):
             dir1(f)
         file1(f)
